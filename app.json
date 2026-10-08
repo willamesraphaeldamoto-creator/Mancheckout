@@ -3,13 +3,13 @@
     "name": "Man Checkout",
     "slug": "man-checkout",
     "scheme": "mancheckout",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {"image":"./assets/splash-icon.png","resizeMode":"contain","backgroundColor":"#083A42"},
-    "android": {"package":"com.mancheckout.app","versionCode":1,"adaptiveIcon":{"foregroundImage":"./assets/adaptive-icon.png","backgroundColor":"#0B5E55"}},
+    "android": {"package":"com.mancheckout.app","versionCode":2,"adaptiveIcon":{"foregroundImage":"./assets/adaptive-icon.png","backgroundColor":"#0B5E55"}},
     "ios":{"bundleIdentifier":"com.mancheckout.app","supportsTablet":false},
     "web":{"favicon":"./assets/favicon.png"}
   }
