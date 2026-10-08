@@ -3,6 +3,21 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { firebaseConfig } from './config';
 
-export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+let app;
+let auth;
+let db;
+
+export function getFirebaseApp() {
+  if (!app) app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  return app;
+}
+
+export function getAuthInstance() {
+  if (!auth) auth = getAuth(getFirebaseApp());
+  return auth;
+}
+
+export function getDbInstance() {
+  if (!db) db = getFirestore(getFirebaseApp());
+  return db;
+}
