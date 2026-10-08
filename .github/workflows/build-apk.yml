@@ -1,0 +1,49 @@
+name: Gerar APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Preparar icones
+        run: |
+          mkdir -p assets
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+          convert -background none assets/logo.svg -resize 1024x1024 assets/icon.png
+          convert -background none assets/logo.svg -resize 1024x1024 assets/adaptive-icon.png
+          convert -background '#083A42' assets/logo.svg -resize 512x512 assets/splash-icon.png
+          convert -background none assets/logo.svg -resize 256x256 assets/favicon.png
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Alinhar Expo
+        run: npx expo install --fix
+      - name: Gerar Android
+        run: npx expo prebuild --platform android --no-install
+      - name: Compilar APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a -Dorg.gradle.jvmargs='-Xmx4g -XX:MaxMetaspaceSize=1g'
+      - name: Renomear APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk man-checkout.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: man-checkout-apk
+          path: man-checkout.apk
+      - name: Publicar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Man Checkout APK
+          files: man-checkout.apk
