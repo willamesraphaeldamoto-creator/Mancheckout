@@ -1,0 +1,3 @@
+import {auth} from './firebase';
+import {API_URL} from './config';
+export async function api(path,{method='GET',body}={}){const user=auth.currentUser;if(!user)throw new Error('Faça login novamente.');const token=await user.getIdToken();let res;try{res=await fetch(`${API_URL}/api${path}`,{method,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:body?JSON.stringify(body):undefined})}catch(e){throw new Error('Sem conexão com o servidor do Man Checkout. Verifique a URL do backend.')}let data={};try{data=await res.json()}catch(e){}if(!res.ok)throw new Error(data.error||`Erro ${res.status}`);return data}
